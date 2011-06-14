@@ -1,0 +1,23 @@
+name: ButtonControl
+main: me.johni.ButtonControl.ButtonControl
+version: 2.1
+website: http://bukkit.org
+author: johni
+description: >
+             Switch weather or time by press a button
+commands:
+  buttonstop:
+    description: Sets the stop button
+    usage: /<command>
+  buttonrain:
+    description: Sets the rain button
+    usage: /<command>
+  buttonthunder:
+    description: Sets the thunder button
+    usage: /<command>
+  buttonday:
+    description: Sets the day button
+    usage: /<command>
+  buttonnight:
+    description: Sets the night button
+    usage: /<command>
