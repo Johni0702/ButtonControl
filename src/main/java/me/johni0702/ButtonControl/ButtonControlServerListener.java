@@ -1,4 +1,4 @@
-package me.johni.ButtonControl;
+package me.johni0702.ButtonControl;
 
 
 import org.bukkit.event.server.PluginDisableEvent;

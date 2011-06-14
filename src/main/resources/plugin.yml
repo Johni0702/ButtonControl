@@ -1,8 +1,7 @@
 name: ButtonControl
 main: me.johni.ButtonControl.ButtonControl
 version: 2.1
-website: http://bukkit.org
-author: johni
+author: johni0702
 description: >
              Switch weather or time by press a button
 commands:
