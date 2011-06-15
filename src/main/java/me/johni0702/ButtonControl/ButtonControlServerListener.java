@@ -31,7 +31,7 @@ public class ButtonControlServerListener extends ServerListener{
             if (iConomy != null) {
                 if (iConomy.isEnabled() && iConomy.getClass().getName().equals("com.iConomy.iConomy")) {
                     plugin.iconomy = (iConomy)iConomy;
-                    System.out.println("[ButtonControl] iConomy was detected.");
+                    ButtonControlLogger.info("iConomy was detected");
                 }
             }
         }
