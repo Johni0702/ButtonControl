@@ -46,26 +46,26 @@ public class ButtonControlBlockListener extends BlockListener
 			i++;
 		}
 		i = 0;
-		while (i < plugin.stop.length-1)
+		while (i < plugin.sunny.length-1)
 		{
-			if (b.getX() == plugin.stop[i].getX() &&
-				b.getY() == plugin.stop[i].getY() &&
-				b.getZ() == plugin.stop[i].getZ())
+			if (b.getX() == plugin.sunny[i].getX() &&
+				b.getY() == plugin.sunny[i].getY() &&
+				b.getZ() == plugin.sunny[i].getZ())
 			{
 				if (!e.getPlayer().isOp())
 				{
 					e.setCancelled(true);
 					return;
 				}
-				while (i < plugin.stop.length-1)
+				while (i < plugin.sunny.length-1)
 				{
-					ButtonControl.config.setProperty("Buttons.Stop.X."+i, ButtonControl.config.getInt("Buttons.Stop.X."+(i+1), 0));
-					ButtonControl.config.setProperty("Buttons.Stop.Y."+i, ButtonControl.config.getInt("Buttons.Stop.Y."+(i+1), 0));
-					ButtonControl.config.setProperty("Buttons.Stop.Z."+i, ButtonControl.config.getInt("Buttons.Stop.Z."+(i+1), 0));
-					ButtonControl.config.setProperty("Buttons.Stop.world."+i, ButtonControl.config.getString("Buttons.Stop.world."+(i+1)));
+					ButtonControl.config.setProperty("Buttons.Sunny.X."+i, ButtonControl.config.getInt("Buttons.Sunny.X."+(i+1), 0));
+					ButtonControl.config.setProperty("Buttons.Sunny.Y."+i, ButtonControl.config.getInt("Buttons.Sunny.Y."+(i+1), 0));
+					ButtonControl.config.setProperty("Buttons.Sunny.Z."+i, ButtonControl.config.getInt("Buttons.Sunny.Z."+(i+1), 0));
+					ButtonControl.config.setProperty("Buttons.Sunny.world."+i, ButtonControl.config.getString("Buttons.Sunny.world."+(i+1)));
 					i++;
 				}
-				ButtonControl.config.setProperty("Buttons.StopAnzahl", ButtonControl.config.getInt("Buttons.StopAnzahl", 0)-1);
+				ButtonControl.config.setProperty("Buttons.SunnyAnzahl", ButtonControl.config.getInt("Buttons.SunnyAnzahl", 0)-1);
 				ButtonControl.config.save();
 				plugin.loadFile();
 			}
@@ -85,13 +85,13 @@ public class ButtonControlBlockListener extends BlockListener
 				}
 				while (i < plugin.thunder.length-1)
 				{
-					ButtonControl.config.setProperty("Buttons.Storm.X."+i, ButtonControl.config.getInt("Buttons.Storm.X."+(i+1), 0));
-					ButtonControl.config.setProperty("Buttons.Storm.Y."+i, ButtonControl.config.getInt("Buttons.Storm.Y."+(i+1), 0));
-					ButtonControl.config.setProperty("Buttons.Storm.Z."+i, ButtonControl.config.getInt("Buttons.Storm.Z."+(i+1), 0));
-					ButtonControl.config.setProperty("Buttons.Storm.world."+i, ButtonControl.config.getString("Buttons.Storm.world."+(i+1)));
+					ButtonControl.config.setProperty("Buttons.Thunder.X."+i, ButtonControl.config.getInt("Buttons.Thunder.X."+(i+1), 0));
+					ButtonControl.config.setProperty("Buttons.Thunder.Y."+i, ButtonControl.config.getInt("Buttons.Thunder.Y."+(i+1), 0));
+					ButtonControl.config.setProperty("Buttons.Thunder.Z."+i, ButtonControl.config.getInt("Buttons.Thunder.Z."+(i+1), 0));
+					ButtonControl.config.setProperty("Buttons.Thunder.world."+i, ButtonControl.config.getString("Buttons.Thunder.world."+(i+1)));
 					i++;
 				}
-				ButtonControl.config.setProperty("Buttons.StormAnzahl", ButtonControl.config.getInt("Buttons.StormAnzahl", 0)-1);
+				ButtonControl.config.setProperty("Buttons.ThunderAnzahl", ButtonControl.config.getInt("Buttons.ThunderAnzahl", 0)-1);
 				ButtonControl.config.save();
 				plugin.loadFile();
 			}

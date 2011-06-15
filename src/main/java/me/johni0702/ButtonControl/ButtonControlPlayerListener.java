@@ -18,185 +18,216 @@ public class ButtonControlPlayerListener extends PlayerListener{
 	{
 		if (!e.hasBlock()) return;
 		if (e.getClickedBlock().getTypeId() != 77 && e.getClickedBlock().getTypeId() != 70) return;
-		int i = plugin.stop.length - 1;
+		
+		int i = plugin.sunny.length - 1;
 		while (i >= 0)
 		{
-			if (e.getClickedBlock() == plugin.stop[i])
+			if (e.getClickedBlock() == plugin.sunny[i])
 			{
-				plugin.amount = plugin.stopcost[i];
-				if (plugin.icon && plugin.iconomy != null)
-				{
-					Holdings bank = iConomy.getAccount(e.getPlayer().getName()).getHoldings();
-					if (!bank.hasUnder(plugin.amount))
+				if (ButtonControlPermissions.sunny(e.getPlayer())) {
+					plugin.amount = plugin.sunnycost[i];
+					if (plugin.icon && plugin.iconomy != null)
 					{
-						bank.subtract(plugin.amount);
-						plugin.rstart = 0;
-						plugin.tstart = 0;
-						plugin.getServer().getWorld(plugin.worldss[i]).setStorm(false);
-						plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
-						plugin.sstart = System.currentTimeMillis();
-						e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[2]);
-					}
-				}else
-					if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
-							e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
-					{
-						if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
-							e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
+						Holdings bank = iConomy.getAccount(e.getPlayer().getName()).getHoldings();
+						if (!bank.hasUnder(plugin.amount))
+						{
+							bank.subtract(plugin.amount);
+							plugin.rstart = 0;
+							plugin.tstart = 0;
+							plugin.getServer().getWorld(plugin.worldss[i]).setStorm(false);
+							plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
+							plugin.sstart = System.currentTimeMillis();
+							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[2]);
+						}
+					}else
+						if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
+								e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
+						{
+							if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
+								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
+							else
+								e.getPlayer().getInventory().setItemInHand(null);
+							plugin.rstart = 0;
+							plugin.tstart = 0;
+							plugin.getServer().getWorld(plugin.worldss[i]).setStorm(false);
+							plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
+							plugin.sstart = System.currentTimeMillis();
+							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[2]);
+						}
 						else
-							e.getPlayer().getInventory().setItemInHand(null);
-						plugin.rstart = 0;
-						plugin.tstart = 0;
-						plugin.getServer().getWorld(plugin.worldss[i]).setStorm(false);
-						plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
-						plugin.sstart = System.currentTimeMillis();
-						e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[2]);
-					}
-					else
-						e.getPlayer().sendMessage(plugin.messages[3]);
+							e.getPlayer().sendMessage(plugin.messages[3]);
+				} else {
+					e.getPlayer().sendMessage(plugin.messages[13]);
+					e.setCancelled(true);
+				}
 			}
 			i--;
 		}
+		
 		i = plugin.rain.length - 1;
 		while (i >= 0)
 		{
 			if (e.getClickedBlock() == plugin.rain[i])
 			{
-				plugin.amount = plugin.raincost[i];
-				if (plugin.icon && plugin.iconomy != null)
-				{
-					Holdings bank = iConomy.getAccount(e.getPlayer().getName()).getHoldings();
-					if (!bank.hasUnder(plugin.amount))
+				if (ButtonControlPermissions.rain(e.getPlayer())) {
+					plugin.amount = plugin.raincost[i];
+					if (plugin.icon && plugin.iconomy != null)
 					{
-						bank.subtract(plugin.amount);
-						plugin.sstart = 0;
-						plugin.tstart = 0;
-						plugin.getServer().getWorld(plugin.worldss[i]).setStorm(true);
-						plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
-						plugin.rstart = System.currentTimeMillis();
-						e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[4]);
-					}
-				}else
-					if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
-							e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
-					{
-						if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
-							e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
+						Holdings bank = iConomy.getAccount(e.getPlayer().getName()).getHoldings();
+						if (!bank.hasUnder(plugin.amount))
+						{
+							bank.subtract(plugin.amount);
+							plugin.sstart = 0;
+							plugin.tstart = 0;
+							plugin.getServer().getWorld(plugin.worldss[i]).setStorm(true);
+							plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
+							plugin.rstart = System.currentTimeMillis();
+							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[4]);
+						}
+					}else
+						if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
+								e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
+						{
+							if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
+								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
+							else
+								e.getPlayer().getInventory().setItemInHand(null);
+							plugin.sstart = 0;
+							plugin.tstart = 0;
+							plugin.getServer().getWorld(plugin.worldss[i]).setStorm(true);
+							plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
+							plugin.rstart = System.currentTimeMillis();
+							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[4]);
+						}
 						else
-							e.getPlayer().getInventory().setItemInHand(null);
-						plugin.sstart = 0;
-						plugin.tstart = 0;
-						plugin.getServer().getWorld(plugin.worldss[i]).setStorm(true);
-						plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
-						plugin.rstart = System.currentTimeMillis();
-						e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[4]);
-					}
-					else
-						e.getPlayer().sendMessage(plugin.messages[3]);
+							e.getPlayer().sendMessage(plugin.messages[3]);
+				} else {
+					e.getPlayer().sendMessage(plugin.messages[13]);
+					e.setCancelled(true);
+				}
 			}
 			i--;
 		}
+		
 		i = plugin.thunder.length - 1;
 		while (i >= 0)
 		{
 			if (e.getClickedBlock() == plugin.thunder[i])
 			{
-				plugin.amount = plugin.thundercost[i];
-				if (plugin.icon && plugin.iconomy != null)
-				{
-					Holdings bank = iConomy.getAccount(e.getPlayer().getName()).getHoldings();
-					if (!bank.hasUnder(plugin.amount))
+				if (ButtonControlPermissions.thunder(e.getPlayer())) {
+					plugin.amount = plugin.thundercost[i];
+					if (plugin.icon && plugin.iconomy != null)
 					{
-						bank.subtract(plugin.amount);
-						plugin.sstart = 0;
-						plugin.rstart = 0;
-						plugin.getServer().getWorld(plugin.worldss[i]).setStorm(true);
-						plugin.getServer().getWorld(plugin.worldss[i]).setThundering(true);
-						plugin.tstart = System.currentTimeMillis();
-						e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[5]);
-					}
-				}else
-					if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
-							e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
-					{
-						if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
-							e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
+						Holdings bank = iConomy.getAccount(e.getPlayer().getName()).getHoldings();
+						if (!bank.hasUnder(plugin.amount))
+						{
+							bank.subtract(plugin.amount);
+							plugin.sstart = 0;
+							plugin.rstart = 0;
+							plugin.getServer().getWorld(plugin.worldss[i]).setStorm(true);
+							plugin.getServer().getWorld(plugin.worldss[i]).setThundering(true);
+							plugin.tstart = System.currentTimeMillis();
+							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[5]);
+						}
+					}else
+						if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
+								e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
+						{
+							if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
+								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
+							else
+								e.getPlayer().getInventory().setItemInHand(null);
+							plugin.sstart = 0;
+							plugin.rstart = 0;
+							plugin.getServer().getWorld(plugin.worldst[i]).setStorm(true);
+							plugin.getServer().getWorld(plugin.worldst[i]).setThundering(true);
+							plugin.tstart = System.currentTimeMillis();
+							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[5]);
+						}
 						else
-							e.getPlayer().getInventory().setItemInHand(null);
-						plugin.sstart = 0;
-						plugin.rstart = 0;
-						plugin.getServer().getWorld(plugin.worldst[i]).setStorm(true);
-						plugin.getServer().getWorld(plugin.worldst[i]).setThundering(true);
-						plugin.tstart = System.currentTimeMillis();
-						e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[5]);
-					}
-					else
-						e.getPlayer().sendMessage(plugin.messages[3]);
+							e.getPlayer().sendMessage(plugin.messages[3]);
+				} else {
+					e.getPlayer().sendMessage(plugin.messages[13]);
+					e.setCancelled(true);
+				}
 			}
 			i--;
 		}
+		
 		i = plugin.day.length - 1;
 		while (i >= 0)
 		{
 			if (e.getClickedBlock() == plugin.day[i])
 			{
-				plugin.amount = plugin.daycost[i];
-				if (plugin.icon && plugin.iconomy != null)
-				{
-					Holdings bank = iConomy.getAccount(e.getPlayer().getName()).getHoldings();
-					if (!bank.hasUnder(plugin.amount))
+				if (ButtonControlPermissions.day(e.getPlayer())) {
+					plugin.amount = plugin.daycost[i];
+					if (plugin.icon && plugin.iconomy != null)
 					{
-						bank.subtract(plugin.amount);
-						plugin.getServer().getWorld(plugin.worldsd[i]).setTime(0);
-						e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[11]);
-					}
-				}else
-					if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
-							e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
-					{
-						if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
-							e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
+						Holdings bank = iConomy.getAccount(e.getPlayer().getName()).getHoldings();
+						if (!bank.hasUnder(plugin.amount))
+						{
+							bank.subtract(plugin.amount);
+							plugin.getServer().getWorld(plugin.worldsd[i]).setTime(0);
+							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[11]);
+						}
+					}else
+						if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
+								e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
+						{
+							if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
+								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
+							else
+								e.getPlayer().getInventory().setItemInHand(null);
+							plugin.getServer().getWorld(plugin.worldsd[i]).setTime(0);
+							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[11]);
+						}
 						else
-							e.getPlayer().getInventory().setItemInHand(null);
-						plugin.getServer().getWorld(plugin.worldsd[i]).setTime(0);
-						e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[11]);
-					}
-					else
-						e.getPlayer().sendMessage(plugin.messages[3]);
+							e.getPlayer().sendMessage(plugin.messages[3]);
+				} else {
+					e.getPlayer().sendMessage(plugin.messages[13]);
+					e.setCancelled(true);
+				}
 			}
 			i--;
 		}
+		
 		i = plugin.night.length - 1;
 		while (i >= 0)
 		{
 			if (e.getClickedBlock() == plugin.night[i])
 			{
-				plugin.amount = plugin.nightcost[i];
-				if (plugin.icon && plugin.iconomy != null)
-				{
-					Holdings bank = iConomy.getAccount(e.getPlayer().getName()).getHoldings();
-					if (!bank.hasUnder(plugin.amount))
+				if (ButtonControlPermissions.night(e.getPlayer())) {
+					plugin.amount = plugin.nightcost[i];
+					if (plugin.icon && plugin.iconomy != null)
 					{
-						bank.subtract(plugin.amount);
-						plugin.getServer().getWorld(plugin.worldsn[i]).setTime(14000);
-						e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[12]);
-					}
-				}else
-					if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
-							e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
-					{
-						if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
-							e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
+						Holdings bank = iConomy.getAccount(e.getPlayer().getName()).getHoldings();
+						if (!bank.hasUnder(plugin.amount))
+						{
+							bank.subtract(plugin.amount);
+							plugin.getServer().getWorld(plugin.worldsn[i]).setTime(14000);
+							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[12]);
+						}
+					}else
+						if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
+								e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
+						{
+							if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
+								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
+							else
+								e.getPlayer().getInventory().setItemInHand(null);
+							plugin.getServer().getWorld(plugin.worldsn[i]).setTime(14000);
+							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[12]);
+						}
 						else
-							e.getPlayer().getInventory().setItemInHand(null);
-						plugin.getServer().getWorld(plugin.worldsn[i]).setTime(14000);
-						e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[12]);
-					}
-					else
-						e.getPlayer().sendMessage(plugin.messages[3]);
+							e.getPlayer().sendMessage(plugin.messages[3]);
+				} else {
+					e.getPlayer().sendMessage(plugin.messages[13]);
+					e.setCancelled(true);
+				}
 			}
 			i--;
 		}
+		
 		if ((e.getClickedBlock().getTypeId() == 77  || e.getClickedBlock().getTypeId() == 70) && plugin.push != 0)
 		{
 			if (plugin.push == 1)
@@ -233,15 +264,15 @@ public class ButtonControlPlayerListener extends PlayerListener{
 			}
 			if (plugin.push == 3)
 			{
-				int num = plugin.stop.length-1;
-				plugin.stop[num] = e.getClickedBlock();
+				int num = plugin.sunny.length-1;
+				plugin.sunny[num] = e.getClickedBlock();
 				plugin.worldss[num] = e.getClickedBlock().getWorld().getName();
-				ButtonControl.config.setProperty("Buttons.StopAnzahl", plugin.stop.length);
-				ButtonControl.config.setProperty("Buttons.Stop.world."+num , e.getClickedBlock().getLocation().getWorld().getName());
-				ButtonControl.config.setProperty("Buttons.Stop.X."+num , e.getClickedBlock().getLocation().getBlockX());
-				ButtonControl.config.setProperty("Buttons.Stop.Y."+num , e.getClickedBlock().getLocation().getBlockY());
-				ButtonControl.config.setProperty("Buttons.Stop.Z."+num , e.getClickedBlock().getLocation().getBlockZ());
-				ButtonControl.config.setProperty("Buttons.Stop.cost."+num , plugin.pcost);
+				ButtonControl.config.setProperty("Buttons.SunnyAnzahl", plugin.sunny.length);
+				ButtonControl.config.setProperty("Buttons.Sunny.world."+num , e.getClickedBlock().getLocation().getWorld().getName());
+				ButtonControl.config.setProperty("Buttons.Sunny.X."+num , e.getClickedBlock().getLocation().getBlockX());
+				ButtonControl.config.setProperty("Buttons.Sunny.Y."+num , e.getClickedBlock().getLocation().getBlockY());
+				ButtonControl.config.setProperty("Buttons.Sunny.Z."+num , e.getClickedBlock().getLocation().getBlockZ());
+				ButtonControl.config.setProperty("Buttons.Sunny.cost."+num , plugin.pcost);
 				ButtonControl.config.save();
 				plugin.loadFile();
 				e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[8]);

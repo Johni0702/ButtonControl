@@ -1,22 +1,11 @@
 name: ButtonControl
-main: me.johni.ButtonControl.ButtonControl
-version: 2.1
+main: me.johni0702.ButtonControl.ButtonControl
+version: 2.2
 author: johni0702
 description: >
-             Switch weather or time by press a button
+             Switch weather or time by pressing a button
 commands:
-  buttonstop:
-    description: Sets the stop button
-    usage: /<command>
-  buttonrain:
-    description: Sets the rain button
-    usage: /<command>
-  buttonthunder:
-    description: Sets the thunder button
-    usage: /<command>
-  buttonday:
-    description: Sets the day button
-    usage: /<command>
-  buttonnight:
-    description: Sets the night button
-    usage: /<command>
+  buttoncontrol:
+    description: Sets the sunny button
+    usage: /<command> [sunny/rain/thunder/day/night]
+    aliases: [bc]
