@@ -216,6 +216,7 @@ public class ButtonControl extends JavaPlugin
 		messages[10]=config.getString("Messages.night_set", messages[10]);
 		messages[11]=config.getString("Messages.day_comes", messages[11]);
 		messages[12]=config.getString("Messages.night_comes", messages[12]);
+		messages[13]=config.getString("Messages.night_comes", messages[13]);
 		
 	}
 	
@@ -227,8 +228,7 @@ public class ButtonControl extends JavaPlugin
 		
 		if (commandName.equals("buttoncontrol") || commandName.equals("bc")) {
 			Player player = (Player)sender;
-			if (ButtonControlPermissions.moderator(player) || ButtonControlPermissions.isAdmin(player)) {
-				sender.sendMessage("blubb");
+			if (ButtonControlPermissions.canSetButtons(player)) {
 				if (split.length == 2 && split[0].equalsIgnoreCase("rain")){
 						//if (args.length != 2) return false;
 						push = 1;
@@ -266,7 +266,7 @@ public class ButtonControl extends JavaPlugin
 				}
 			} else {
 				sender.sendMessage(messages[1]);
-				return false;
+				return true;
 			}
 		}
 		return false;
