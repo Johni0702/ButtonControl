@@ -26,7 +26,7 @@ public class ButtonControlBlockListener extends BlockListener
 				b.getY() == plugin.rain[i].getY() &&
 				b.getZ() == plugin.rain[i].getZ())
 			{
-				if (!e.getPlayer().isOp())
+				if (!ButtonControlPermissions.canDestroyButtons(e.getPlayer()))
 				{
 					e.setCancelled(true);
 					return;
@@ -52,7 +52,7 @@ public class ButtonControlBlockListener extends BlockListener
 				b.getY() == plugin.sunny[i].getY() &&
 				b.getZ() == plugin.sunny[i].getZ())
 			{
-				if (!e.getPlayer().isOp())
+				if (!ButtonControlPermissions.canDestroyButtons(e.getPlayer()))
 				{
 					e.setCancelled(true);
 					return;
@@ -78,7 +78,7 @@ public class ButtonControlBlockListener extends BlockListener
 				b.getY() == plugin.thunder[i].getY() &&
 				b.getZ() == plugin.thunder[i].getZ())
 			{
-				if (!e.getPlayer().isOp())
+				if (!ButtonControlPermissions.canDestroyButtons(e.getPlayer()))
 				{
 					e.setCancelled(true);
 					return;
@@ -104,7 +104,7 @@ public class ButtonControlBlockListener extends BlockListener
 				b.getY() == plugin.day[i].getY() &&
 				b.getZ() == plugin.day[i].getZ())
 			{
-				if (!e.getPlayer().isOp())
+				if (!ButtonControlPermissions.canDestroyButtons(e.getPlayer()))
 				{
 					e.setCancelled(true);
 					return;
@@ -130,7 +130,7 @@ public class ButtonControlBlockListener extends BlockListener
 				b.getY() == plugin.night[i].getY() &&
 				b.getZ() == plugin.night[i].getZ())
 			{
-				if (!e.getPlayer().isOp())
+				if (!ButtonControlPermissions.canDestroyButtons(e.getPlayer()))
 				{
 					e.setCancelled(true);
 					return;
