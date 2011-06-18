@@ -41,7 +41,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 						}
 					}else
 						if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
-								e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
+								(e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item  || plugin.amount == 0) && !plugin.icon)
 						{
 							if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
 								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
@@ -79,14 +79,14 @@ public class ButtonControlPlayerListener extends PlayerListener{
 							bank.subtract(plugin.amount);
 							plugin.sstart = 0;
 							plugin.tstart = 0;
-							plugin.getServer().getWorld(plugin.worldss[i]).setStorm(true);
-							plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
+							plugin.getServer().getWorld(plugin.worldsr[i]).setStorm(true);
+							plugin.getServer().getWorld(plugin.worldsr[i]).setThundering(false);
 							plugin.rstart = System.currentTimeMillis();
 							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[4]);
 						}
 					}else
 						if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
-								e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
+								(e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item  || plugin.amount == 0) && !plugin.icon)
 						{
 							if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
 								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
@@ -94,8 +94,8 @@ public class ButtonControlPlayerListener extends PlayerListener{
 								e.getPlayer().getInventory().setItemInHand(null);
 							plugin.sstart = 0;
 							plugin.tstart = 0;
-							plugin.getServer().getWorld(plugin.worldss[i]).setStorm(true);
-							plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
+							plugin.getServer().getWorld(plugin.worldsr[i]).setStorm(true);
+							plugin.getServer().getWorld(plugin.worldsr[i]).setThundering(false);
 							plugin.rstart = System.currentTimeMillis();
 							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[4]);
 						}
@@ -124,14 +124,14 @@ public class ButtonControlPlayerListener extends PlayerListener{
 							bank.subtract(plugin.amount);
 							plugin.sstart = 0;
 							plugin.rstart = 0;
-							plugin.getServer().getWorld(plugin.worldss[i]).setStorm(true);
-							plugin.getServer().getWorld(plugin.worldss[i]).setThundering(true);
+							plugin.getServer().getWorld(plugin.worldst[i]).setStorm(true);
+							plugin.getServer().getWorld(plugin.worldst[i]).setThundering(true);
 							plugin.tstart = System.currentTimeMillis();
 							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[5]);
 						}
 					}else
 						if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
-								e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
+								(e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item  || plugin.amount == 0) && !plugin.icon)
 						{
 							if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
 								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
@@ -172,7 +172,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 						}
 					}else
 						if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
-								e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
+								(e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item  || plugin.amount == 0)&& !plugin.icon)
 						{
 							if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
 								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
@@ -209,7 +209,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 						}
 					}else
 						if (e.getPlayer().getInventory().getItemInHand().getAmount() >= plugin.amount &&
-								e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item && !plugin.icon)
+								(e.getPlayer().getInventory().getItemInHand().getTypeId() == plugin.item  || plugin.amount == 0) && !plugin.icon)
 						{
 							if (e.getPlayer().getInventory().getItemInHand().getAmount() > plugin.amount)
 								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
@@ -251,12 +251,12 @@ public class ButtonControlPlayerListener extends PlayerListener{
 				int num = plugin.thunder.length-1;
 				plugin.thunder[num] = e.getClickedBlock();
 				plugin.worldst[num] = e.getClickedBlock().getWorld().getName();
-				ButtonControl.config.setProperty("Buttons.StormAnzahl", plugin.thunder.length);
-				ButtonControl.config.setProperty("Buttons.Storm.world."+num , e.getClickedBlock().getLocation().getWorld().getName());
-				ButtonControl.config.setProperty("Buttons.Storm.X."+num , e.getClickedBlock().getLocation().getBlockX());
-				ButtonControl.config.setProperty("Buttons.Storm.Y."+num , e.getClickedBlock().getLocation().getBlockY());
-				ButtonControl.config.setProperty("Buttons.Storm.Z."+num , e.getClickedBlock().getLocation().getBlockZ());
-				ButtonControl.config.setProperty("Buttons.Storm.cost."+num , plugin.pcost);
+				ButtonControl.config.setProperty("Buttons.ThunderAnzahl", plugin.thunder.length);
+				ButtonControl.config.setProperty("Buttons.Thunder.world."+num , e.getClickedBlock().getLocation().getWorld().getName());
+				ButtonControl.config.setProperty("Buttons.Thunder.X."+num , e.getClickedBlock().getLocation().getBlockX());
+				ButtonControl.config.setProperty("Buttons.Thunder.Y."+num , e.getClickedBlock().getLocation().getBlockY());
+				ButtonControl.config.setProperty("Buttons.Thunder.Z."+num , e.getClickedBlock().getLocation().getBlockZ());
+				ButtonControl.config.setProperty("Buttons.Thunder.cost."+num , plugin.pcost);
 				ButtonControl.config.save();
 				plugin.loadFile();
 				e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[7]);
