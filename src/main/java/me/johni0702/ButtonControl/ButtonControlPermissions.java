@@ -57,12 +57,12 @@ public class ButtonControlPermissions {
 		}
 	}
 
-	public static boolean isAdmin(Player player) {
-		return permission(player, "buttoncontrol.admin", player.isOp());
+	public static boolean canSetButtons(Player player) {
+		return permission(player, "buttoncontrol.set", player.isOp());
 	}
-
-	public static boolean moderator(Player player) {
-		return permission(player, "buttoncontrol.moderator", true);
+	
+	public static boolean canDestroyButtons(Player player) {
+		return permission(player, "buttoncontrol.destroy", player.isOp());
 	}
 
 	public static boolean day(Player player) {
