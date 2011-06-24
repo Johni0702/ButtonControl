@@ -6,6 +6,6 @@ description: >
              Switch weather or time by pressing a button
 commands:
   buttoncontrol:
-    description: Sets the sunny button
-    usage: /<command> [sunny/rain/thunder/day/night]
+    description: Sets a button.
+    usage: /<command> [sunny/rain/thunder/day/night] [Money]
     aliases: [bc]
