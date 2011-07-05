@@ -63,6 +63,8 @@ public class ButtonControl extends JavaPlugin
 	int rd = 10;
 	int td = 10;
 	int sd = 10;
+	int cooldown = 0;
+	long lastaction = 0;
 	long rstart = 0;
 	long tstart = 0;
 	long sstart = 0;
@@ -74,6 +76,7 @@ public class ButtonControl extends JavaPlugin
 	String[] worldst = null;
 	String[] worldsd = null;
 	String[] worldsn = null;
+	String acc = null;
 
 	public void onEnable(){
 		ButtonControlPermissions.initialize(getServer());
@@ -106,6 +109,8 @@ public class ButtonControl extends JavaPlugin
 				config.setProperty("Messages.day_comes", messages[11]);
 				config.setProperty("Messages.night_comes", messages[12]);
 				config.setProperty("Messages.not_use", messages[13]);
+				config.setProperty("iConomy.account", acc);
+				config.setProperty("Cooldown", cooldown);
 				config.save();
 				System.out.println("[ButtonControl] Config-File created.");
 				this.loadFile();
@@ -216,7 +221,9 @@ public class ButtonControl extends JavaPlugin
 		messages[10]=config.getString("Messages.night_set", messages[10]);
 		messages[11]=config.getString("Messages.day_comes", messages[11]);
 		messages[12]=config.getString("Messages.night_comes", messages[12]);
-		messages[13]=config.getString("Messages.night_comes", messages[13]);
+		messages[13]=config.getString("Messages.not_use", messages[13]);
+		acc=config.getString("iConomy.account", acc);
+		cooldown=config.getInt("Cooldown", cooldown);
 		
 	}
 	
