@@ -25,6 +25,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 			if (e.getClickedBlock() == plugin.sunny[i])
 			{
 				if (ButtonControlPermissions.sunny(e.getPlayer())) {
+					if (plugin.lastaction > System.currentTimeMillis()-plugin.cooldown*1000)return;
 					plugin.amount = plugin.sunnycost[i];
 					if (plugin.icon && plugin.iconomy != null)
 					{
@@ -32,8 +33,10 @@ public class ButtonControlPlayerListener extends PlayerListener{
 						if (!bank.hasUnder(plugin.amount))
 						{
 							bank.subtract(plugin.amount);
+							iConomy.getAccount(plugin.acc).getHoldings().add(plugin.amount);
 							plugin.rstart = 0;
 							plugin.tstart = 0;
+							plugin.lastaction = System.currentTimeMillis();
 							plugin.getServer().getWorld(plugin.worldss[i]).setStorm(false);
 							plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
 							plugin.sstart = System.currentTimeMillis();
@@ -49,6 +52,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 								e.getPlayer().getInventory().setItemInHand(null);
 							plugin.rstart = 0;
 							plugin.tstart = 0;
+							plugin.lastaction = System.currentTimeMillis();
 							plugin.getServer().getWorld(plugin.worldss[i]).setStorm(false);
 							plugin.getServer().getWorld(plugin.worldss[i]).setThundering(false);
 							plugin.sstart = System.currentTimeMillis();
@@ -70,6 +74,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 			if (e.getClickedBlock() == plugin.rain[i])
 			{
 				if (ButtonControlPermissions.rain(e.getPlayer())) {
+					if (plugin.lastaction > System.currentTimeMillis()-plugin.cooldown*1000)return;
 					plugin.amount = plugin.raincost[i];
 					if (plugin.icon && plugin.iconomy != null)
 					{
@@ -77,8 +82,10 @@ public class ButtonControlPlayerListener extends PlayerListener{
 						if (!bank.hasUnder(plugin.amount))
 						{
 							bank.subtract(plugin.amount);
+							iConomy.getAccount(plugin.acc).getHoldings().add(plugin.amount);
 							plugin.sstart = 0;
 							plugin.tstart = 0;
+							plugin.lastaction = System.currentTimeMillis();
 							plugin.getServer().getWorld(plugin.worldsr[i]).setStorm(true);
 							plugin.getServer().getWorld(plugin.worldsr[i]).setThundering(false);
 							plugin.rstart = System.currentTimeMillis();
@@ -94,6 +101,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 								e.getPlayer().getInventory().setItemInHand(null);
 							plugin.sstart = 0;
 							plugin.tstart = 0;
+							plugin.lastaction = System.currentTimeMillis();
 							plugin.getServer().getWorld(plugin.worldsr[i]).setStorm(true);
 							plugin.getServer().getWorld(plugin.worldsr[i]).setThundering(false);
 							plugin.rstart = System.currentTimeMillis();
@@ -115,6 +123,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 			if (e.getClickedBlock() == plugin.thunder[i])
 			{
 				if (ButtonControlPermissions.thunder(e.getPlayer())) {
+					if (plugin.lastaction > System.currentTimeMillis()-plugin.cooldown*1000)return;
 					plugin.amount = plugin.thundercost[i];
 					if (plugin.icon && plugin.iconomy != null)
 					{
@@ -122,8 +131,10 @@ public class ButtonControlPlayerListener extends PlayerListener{
 						if (!bank.hasUnder(plugin.amount))
 						{
 							bank.subtract(plugin.amount);
+							iConomy.getAccount(plugin.acc).getHoldings().add(plugin.amount);
 							plugin.sstart = 0;
 							plugin.rstart = 0;
+							plugin.lastaction = System.currentTimeMillis();
 							plugin.getServer().getWorld(plugin.worldst[i]).setStorm(true);
 							plugin.getServer().getWorld(plugin.worldst[i]).setThundering(true);
 							plugin.tstart = System.currentTimeMillis();
@@ -139,6 +150,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 								e.getPlayer().getInventory().setItemInHand(null);
 							plugin.sstart = 0;
 							plugin.rstart = 0;
+							plugin.lastaction = System.currentTimeMillis();
 							plugin.getServer().getWorld(plugin.worldst[i]).setStorm(true);
 							plugin.getServer().getWorld(plugin.worldst[i]).setThundering(true);
 							plugin.tstart = System.currentTimeMillis();
@@ -160,6 +172,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 			if (e.getClickedBlock() == plugin.day[i])
 			{
 				if (ButtonControlPermissions.day(e.getPlayer())) {
+					if (plugin.lastaction > System.currentTimeMillis()-plugin.cooldown*1000)return;
 					plugin.amount = plugin.daycost[i];
 					if (plugin.icon && plugin.iconomy != null)
 					{
@@ -167,6 +180,8 @@ public class ButtonControlPlayerListener extends PlayerListener{
 						if (!bank.hasUnder(plugin.amount))
 						{
 							bank.subtract(plugin.amount);
+							plugin.lastaction = System.currentTimeMillis();
+							iConomy.getAccount(plugin.acc).getHoldings().add(plugin.amount);
 							plugin.getServer().getWorld(plugin.worldsd[i]).setTime(0);
 							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[11]);
 						}
@@ -179,6 +194,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 							else
 								e.getPlayer().getInventory().setItemInHand(null);
 							plugin.getServer().getWorld(plugin.worldsd[i]).setTime(0);
+							plugin.lastaction = System.currentTimeMillis();
 							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[11]);
 						}
 						else
@@ -197,6 +213,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 			if (e.getClickedBlock() == plugin.night[i])
 			{
 				if (ButtonControlPermissions.night(e.getPlayer())) {
+					if (plugin.lastaction > System.currentTimeMillis()-plugin.cooldown*1000)return;
 					plugin.amount = plugin.nightcost[i];
 					if (plugin.icon && plugin.iconomy != null)
 					{
@@ -204,6 +221,8 @@ public class ButtonControlPlayerListener extends PlayerListener{
 						if (!bank.hasUnder(plugin.amount))
 						{
 							bank.subtract(plugin.amount);
+							plugin.lastaction = System.currentTimeMillis();
+							iConomy.getAccount(plugin.acc).getHoldings().add(plugin.amount);
 							plugin.getServer().getWorld(plugin.worldsn[i]).setTime(14000);
 							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[12]);
 						}
@@ -215,6 +234,7 @@ public class ButtonControlPlayerListener extends PlayerListener{
 								e.getPlayer().getItemInHand().setAmount(e.getPlayer().getInventory().getItemInHand().getAmount() - plugin.amount);
 							else
 								e.getPlayer().getInventory().setItemInHand(null);
+							plugin.lastaction = System.currentTimeMillis();
 							plugin.getServer().getWorld(plugin.worldsn[i]).setTime(14000);
 							e.getPlayer().sendMessage(ChatColor.RED + plugin.messages[12]);
 						}
