@@ -1,6 +1,6 @@
 name: ButtonControl
 main: me.johni0702.ButtonControl.ButtonControl
-version: 2.2
+version: 2.3
 author: johni0702
 description: >
              Switch weather or time by pressing a button
