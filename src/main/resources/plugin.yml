@@ -1,11 +1,36 @@
 name: ButtonControl
 main: me.johni0702.ButtonControl.ButtonControl
-version: 2.2
+version: 3.0
 author: johni0702
+soft-depend: [Vault]
 description: >
              Switch weather or time by pressing a button
 commands:
   buttoncontrol:
     description: Sets a button.
-    usage: /<command> [sunny/rain/thunder/day/night] [Money]
+    usage: /<command> <sunny/rain/thunder/day/night> <Price> [Item-id/Receiver]
     aliases: [bc]
+    permission-message: You don't have permission to do that!
+
+permissions:
+    buttoncontrol.set:
+        description: Allows you to set new buttons
+        default: op
+    buttoncontrol.destroy:
+        description: Allows you to destroy buttons
+        default: op
+    buttoncontrol.time.day:
+        description: Allows you to use time day buttons
+        default: yes
+    buttoncontrol.time.night:
+        description: Allows you to use time night buttons
+        default: yes
+    buttoncontrol.weather.sunny:
+        description: Allows you to use sun buttons
+        default: yes
+    buttoncontrol.weather.rain:
+        description: Allows you to use rain buttons
+        default: yes
+    buttoncontrol.weather.thunder:
+        description: Allows you to use thunder buttons
+        default: yes

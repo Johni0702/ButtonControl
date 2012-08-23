@@ -1,45 +1,44 @@
 package me.johni0702.ButtonControl;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import me.johni0702.ButtonControl.ControlButton.ControlType;
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 
-import com.iConomy.iConomy;
 
-import me.johni0702.ButtonControl.ButtonControlLogger;
-import me.johni0702.ButtonControl.ButtonControlPermissions;
 
 public class ButtonControl extends JavaPlugin
 {
-	public boolean icon = false;
-	public iConomy iconomy = null;
+	public static Economy econ;
 	static String mainDir = "plugins/ButtonControl";
-	static File BW = new File(mainDir + File.separator + "ButtonControl.yml");
-	static Configuration config = new Configuration(BW);
+	static File ConfigFile = new File(mainDir + File.separator + "ButtonControl.yml");
+	static FileConfiguration config;
 	
-	int amount = 5;
-	int item = 331;
+//	int amount = 5;
+//	int item = 331;
 
-	private ButtonControlBlockListener BL = null;
-	private ButtonControlPlayerListener PL = null;
-	private ButtonControlServerListener SL = null;
-	private ButtonControlWeatherListener WL = null;
-	String[] messages={"Push a Button!",
+	private ButtonControlListener listener = null;
+	public static String[] messages={"Push a Button!",
 			"You have no permissions to set button controls.",
 			"The sun comes out.",
-			"You don't have enough money",
+			"You don't have enough money ($have$ out of $need$)",
 			"Let it rain",
 			"GO! A STORM IS COMING!",
 			"The rain-button has been set.",
@@ -50,164 +49,132 @@ public class ButtonControl extends JavaPlugin
 			"Good morning!",
 			"It's late, go home.",
 			"You don't have permission to use button controls",};
-	public Block[] sunny = null;
-	public int[] sunnycost = null;
-	public Block[] thunder = null;
-	public int[] thundercost = null;
-	public Block[] rain = null;
-	public int[] raincost = null;
-	public Block[] day = null;
-	public int[] daycost = null;
-	public Block[] night = null;
-	public int[] nightcost = null;
+//	public Block[] sunny = null;
+//	public int[] sunnycost = null;
+//	public Block[] thunder = null;
+//	public int[] thundercost = null;
+//	public Block[] rain = null;
+//	public int[] raincost = null;
+//	public Block[] day = null;
+//	public int[] daycost = null;
+//	public Block[] night = null;
+//	public int[] nightcost = null;
+	public ArrayList<ControlButton> buttons;
 	int rd = 10;
 	int td = 10;
-	int sd = 10;
-	int cooldown = 0;
-	long lastaction = 0;
+	int sd = 10; //TODO: Read from configfile
 	long rstart = 0;
 	long tstart = 0;
 	long sstart = 0;
-	public short push = 0;
-	public int pcost = 0;
-	public ItemStack pay = null;
-	String[] worldss = null;
-	String[] worldsr = null;
-	String[] worldst = null;
-	String[] worldsd = null;
-	String[] worldsn = null;
+	public HashMap<Player,ControlButton> onCreation;
+//	public short push = 0;
+//	public int pcost = 0;
+//	public ItemStack pay = null;
+//	String[] worldss = null;
+//	String[] worldsr = null;
+//	String[] worldst = null;
+//	String[] worldsd = null;
+//	String[] worldsn = null;
 	String acc = null;
 
-	public void onEnable(){
-		ButtonControlPermissions.initialize(getServer());
+	public void onEnable()
+	{
+		onCreation = new HashMap<Player, ControlButton>();
+		buttons = new ArrayList<ControlButton>();
 		
 		new File(mainDir).mkdir();
-		if (!BW.exists())
+		config = getConfig();
+		if (!ConfigFile.exists())
 		{
 			try
 			{
-				BW.createNewFile();
-				config.setProperty("Duration.sun" , sd);
-				config.setProperty("Duration.rain" , rd);
-				config.setProperty("Duration.thunder" , td);
-				config.setProperty("Cost.Item" , item);
-				config.setProperty("iConomy.useiConomy" , icon);
-				config.setProperty("Buttons.SunnyAnzahl", 0);
-				config.setProperty("Buttons.RainAnzahl", 0);
-				config.setProperty("Buttons.ThunderAnzahl", 0);
-				config.setProperty("Messages.push_a_button", messages[0]);
-				config.setProperty("Messages.not_permissions", messages[1]);
-				config.setProperty("Messages.sun_comes", messages[2]);
-				config.setProperty("Messages.not_enough_money", messages[3]);
-				config.setProperty("Messages.rain_comes", messages[4]);
-				config.setProperty("Messages.thunder_comes", messages[5]);
-				config.setProperty("Messages.rain_set", messages[6]);
-				config.setProperty("Messages.thunder_set", messages[7]);
-				config.setProperty("Messages.sunny_set", messages[8]);
-				config.setProperty("Messages.day_set", messages[9]);
-				config.setProperty("Messages.night_set", messages[10]);
-				config.setProperty("Messages.day_comes", messages[11]);
-				config.setProperty("Messages.night_comes", messages[12]);
-				config.setProperty("Messages.not_use", messages[13]);
-				config.setProperty("iConomy.account", acc);
-				config.setProperty("Cooldown", cooldown);
-				config.save();
-				System.out.println("[ButtonControl] Config-File created.");
-				this.loadFile();
+				ConfigFile.createNewFile();
+				config.set("Duration.sun" , sd);
+				config.set("Duration.rain" , rd);
+				config.set("Duration.thunder" , td);
+				config.createSection("Buttons");
+				config.set("Messages.push_a_button", messages[0]);
+				config.set("Messages.not_permissions", messages[1]);
+				config.set("Messages.sun_comes", messages[2]);
+				config.set("Messages.not_enough_money", messages[3]);
+				config.set("Messages.rain_comes", messages[4]);
+				config.set("Messages.thunder_comes", messages[5]);
+				config.set("Messages.rain_set", messages[6]);
+				config.set("Messages.thunder_set", messages[7]);
+				config.set("Messages.sunny_set", messages[8]);
+				config.set("Messages.day_set", messages[9]);
+				config.set("Messages.night_set", messages[10]);
+				config.set("Messages.day_comes", messages[11]);
+				config.set("Messages.night_comes", messages[12]);
+				config.set("Messages.not_use", messages[13]);
+				config.set("Cooldown", 0);
+				config.save(ConfigFile);
+				ButtonControlLogger.info("Config-File created.");
 			}
 			catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
-		else
-		{
-			loadFile();
-		}
-		this.PL = new ButtonControlPlayerListener(this);
-		this.BL = new ButtonControlBlockListener(this);
-		this.SL = new ButtonControlServerListener(this);
-		this.WL = new ButtonControlWeatherListener(this);
-		PluginManager pm = this.getServer().getPluginManager();
-		pm.registerEvent(Event.Type.BLOCK_BREAK, BL, Priority.Normal , this);
-		pm.registerEvent(Event.Type.PLAYER_INTERACT, PL, Priority.Normal , this);
-		pm.registerEvent(Event.Type.WEATHER_CHANGE, WL, Priority.Highest, this);
-		pm.registerEvent(Event.Type.PLUGIN_ENABLE, SL, Priority.Normal , this);
-		pm.registerEvent(Event.Type.PLUGIN_DISABLE, SL, Priority.Normal , this);
-		PluginDescriptionFile pdf = this.getDescription();
-		System.out.println("ButtonControl v" + pdf.getVersion() + " aktiviert.");
+		loadFile();
+		ButtonControlLogger.info("Loaded " + buttons.size() + " buttons.");
+		
+		setupEconomy();
+		
+		listener = new ButtonControlListener(this);
+		this.getServer().getPluginManager().registerEvents(listener, this);
 	}
-	public void onDisable(){
-		//config.save();
-		//System.out.println("ButtonControl deaktiviert.");
+	
+	public void onDisable()
+	{
 	}
-	public void loadFile(){
-		config.load();
-		int tmp =  0;
-		item = config.getInt("Cost.Item", item);
-		amount = config.getInt("Cost.Amount", amount);
-		icon = config.getBoolean("iConomy.useiConomy", icon);
-		int i = 0;
-		tmp = config.getInt("Buttons.SunnyAnzahl", tmp);
-		worldss = new String[config.getInt("Buttons.SunnyAnzahl", i)+1];
-		sunny = new Block[config.getInt("Buttons.SunnyAnzahl", i)+1];
-		sunnycost = new int[config.getInt("Buttons.SunnyAnzahl", i)+1];
-		while (i < tmp)
+	
+	public void loadFile()
+	{
+		try {
+			config.load(ConfigFile);
+		} catch (FileNotFoundException e) 
 		{
-			worldss[i] = config.getString("Buttons.Sunny.world."+i);
-			sunny[i] = this.getServer().getWorld(worldss[i]).getBlockAt(config.getInt("Buttons.Sunny.X."+i , 0),config.getInt("Buttons.Sunny.Y."+i , 0),config.getInt("Buttons.Sunny.Z."+i , 0));
-			sunnycost[i] = config.getInt("Buttons.Sunny.cost."+i, sunnycost[i]);
-			System.out.println(i + " " + tmp);
-			i++;
-		}
-		i = 0;
-		worldsr = new String[config.getInt("Buttons.RainAnzahl", i)+1];
-		rain = new Block[config.getInt("Buttons.RainAnzahl", i)+1];
-		tmp = config.getInt("Buttons.RainAnzahl", tmp);
-		raincost = new int[config.getInt("Buttons.RainAnzahl", i)+1];
-		while (i < tmp)
+			ButtonControlLogger.severe("Config file not found:", e);
+		} catch (IOException e) 
 		{
-			worldsr[i] = config.getString("Buttons.Rain.world."+i);
-			rain[i] = this.getServer().getWorld(worldsr[i]).getBlockAt(config.getInt("Buttons.Rain.X."+i , 0),config.getInt("Buttons.Rain.Y."+i , 0),config.getInt("Buttons.Rain.Z."+i , 0));
-			raincost[i] = config.getInt("Buttons.Rain.cost."+i, raincost[i]);
-			i++;
-		}
-		i = 0;
-		worldst = new String[config.getInt("Buttons.ThunderAnzahl", i)+1];
-		thunder = new Block[config.getInt("Buttons.ThunderAnzahl", i)+1];
-		tmp = config.getInt("Buttons.ThunderAnzahl", tmp);
-		thundercost = new int[config.getInt("Buttons.ThunderAnzahl", i)+1];
-		while (i < tmp)
+			ButtonControlLogger.severe("Error while loading config file:", e);
+		} catch (InvalidConfigurationException e) 
 		{
-			worldst[i] = config.getString("Buttons.Thunder.world."+i);
-			thunder[i] = this.getServer().getWorld(worldst[i]).getBlockAt(config.getInt("Buttons.Thunder.X."+i , 0),config.getInt("Buttons.Thunder.Y."+i , 0),config.getInt("Buttons.Thunder.Z."+i , 0));
-			thundercost[i] = config.getInt("Buttons.Thunder.cost."+i, thundercost[i]);
-			i++;
+			ButtonControlLogger.severe("Your config file is invalid. (Possibly it contains tabs?)", e);
 		}
-		i = 0;
-		worldsd = new String[config.getInt("Buttons.DayAnzahl", i)+1];
-		day = new Block[config.getInt("Buttons.DayAnzahl", i)+1];
-		tmp = config.getInt("Buttons.DayAnzahl", tmp);
-		daycost = new int[config.getInt("Buttons.DayAnzahl", i)+1];
-		while (i < tmp)
+
+//		ConfigurationSection cs = config.getConfigurationSection("Buttons");
+//		System.out.println(cs.);
+		buttons.clear();
+		for (int i = 0; config.contains("Buttons." + Integer.toString(i)); i++)
 		{
-			worldsd[i] = config.getString("Buttons.day.world."+i);
-			day[i] = this.getServer().getWorld(worldsd[i]).getBlockAt(config.getInt("Buttons.day.X."+i , 0),config.getInt("Buttons.day.Y."+i , 0),config.getInt("Buttons.day.Z."+i , 0));
-			daycost[i] = config.getInt("Buttons.day.cost."+i, daycost[i]);
-			i++;
+			ConfigurationSection s = config.getConfigurationSection("Buttons." + i);
+
+			String type = s.getString("type", null);
+//			System.out.println(type);
+			if (type == null || ControlType.valueOf(type) == null)
+			{
+				continue;
+			}
+			
+			World w = getServer().getWorld(s.getString("world"));
+//			System.out.println(w);
+			if (w == null)
+			{
+				continue;
+			}
+			
+			Block block = w.getBlockAt(s.getInt("x" , 0),s.getInt("y" , 0),s.getInt("z" , 0));
+			int price = s.getInt("price", 0);
+			int item = s.getInt("item", 0);
+			String receiver = s.getString("receiver", "");
+			
+			ControlButton cb = new ControlButton(ControlType.valueOf(type), block, price, item);
+			cb.setReceiver(receiver);
+			buttons.add(cb);
 		}
-		i = 0;
-		worldsn = new String[config.getInt("Buttons.NightAnzahl", i)+1];
-		night = new Block[config.getInt("Buttons.NightAnzahl", i)+1];
-		tmp = config.getInt("Buttons.NightAnzahl", tmp);
-		nightcost = new int[config.getInt("Buttons.NightAnzahl", i)+1];
-		while (i < tmp)
-		{
-			worldsn[i] = config.getString("Buttons.night.world."+i);
-			night[i] = this.getServer().getWorld(worldsn[i]).getBlockAt(config.getInt("Buttons.night.X."+i , 0),config.getInt("Buttons.night.Y."+i , 0),config.getInt("Buttons.night.Z."+i , 0));
-			nightcost[i] = config.getInt("Buttons.night.cost."+i, nightcost[i]);
-			i++;
-		}
+		
 		messages[0]=config.getString("Messages.push_a_button", messages[0]);
 		messages[1]=config.getString("Messages.not_permissions", messages[1]);
 		messages[2]=config.getString("Messages.sun_comes", messages[2]);
@@ -222,60 +189,162 @@ public class ButtonControl extends JavaPlugin
 		messages[11]=config.getString("Messages.day_comes", messages[11]);
 		messages[12]=config.getString("Messages.night_comes", messages[12]);
 		messages[13]=config.getString("Messages.not_use", messages[13]);
-		acc=config.getString("iConomy.account", acc);
-		cooldown=config.getInt("Cooldown", cooldown);
+		ControlButton.cooldown=config.getInt("Cooldown", 0);
 		
 	}
 	
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-        String[] split = args;
+	public void saveFile()
+	{
+		config.createSection("Buttons");
+		ConfigurationSection cs = config.getConfigurationSection("Buttons");
+		int i = 0;
+		for (ControlButton cb : buttons)
+		{
+			if (cb == null)
+				continue;
+			cs.createSection(Integer.toString(i));
+			ConfigurationSection s = cs.getConfigurationSection(Integer.toString(i));
+
+			s.set("x", cb.getBlock().getLocation().getBlockX());
+			s.set("y", cb.getBlock().getLocation().getBlockY());
+			s.set("z", cb.getBlock().getLocation().getBlockZ());
+			s.set("world", cb.getBlock().getLocation().getWorld().getName());
+			s.set("type", cb.getType().toString());
+			s.set("price", cb.getPrice());
+			s.set("item", cb.getItem());
+			s.set("receiver", cb.getReceiver());
+			i++;
+		}
+		
+		try 
+		{
+			config.save(ConfigFile);
+		} catch (IOException e) 
+		{
+			ButtonControlLogger.severe("Failed to save config file: ", e);
+		}
+	}
+	
+	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
+	{
         String commandName = command.getName().toLowerCase();
         
-		//if (!(sender instanceof Player))return false;
 		
-		if (commandName.equals("buttoncontrol") || commandName.equals("bc")) {
+		if (commandName.equals("buttoncontrol") || commandName.equals("bc")) 
+		{
+			if (!(sender instanceof Player))
+			{
+				sender.sendMessage("Only players can use this command!");
+				return true;
+			}
 			Player player = (Player)sender;
-			if (ButtonControlPermissions.canSetButtons(player)) {
-				if (split.length == 2 && split[0].equalsIgnoreCase("rain")){
-						//if (args.length != 2) return false;
-						push = 1;
-						pcost = Integer.parseInt(args[1]);
-						sender.sendMessage(ChatColor.RED + messages[0]);
-						return true;
+			
+			if (ButtonControlPermissions.canSetButtons(player)) 
+			{
+				if (args.length != 3)
+				{
+					if (econ == null)
+						player.sendMessage("Useage: /"+commandName+" <sunny/rain/thunder/day/night> <amount> <item>");
+					else
+						player.sendMessage("Useage: /"+commandName+" <sunny/rain/thunder/day/night> <price> <PayTo>");
+					return true;
 				}
-				if (split.length == 2 && split[0].equalsIgnoreCase("thunder")){
-						//if (args.length != 2) return false;
-						push = 2;
-						pcost = Integer.parseInt(args[1]);
-						sender.sendMessage(ChatColor.RED + messages[0]);
-						return true;
+				
+				//What type of changing should be done?
+				ControlType type = null;
+				if (args[0].equalsIgnoreCase("rain"))
+					type = ControlType.RAIN;
+				else if (args[0].equalsIgnoreCase("sunny"))
+					type = ControlType.SUN;
+				else if (args[0].equalsIgnoreCase("thunder"))
+					type = ControlType.THUNDER;
+				else if (args[0].equalsIgnoreCase("day"))
+					type = ControlType.DAY;
+				else if (args[0].equalsIgnoreCase("night"))
+					type = ControlType.NIGHT;
+				if (type == null)
+				{
+					sender.sendMessage("Invalide type: " + args[0]);
+					sender.sendMessage("You can use: sunny/rain/thunder/day/night");
+					return true;
 				}
-				if (split.length == 2 && split[0].equalsIgnoreCase("sunny")){
-						//if (args.length != 2) return false;
-						push = 3;
-						pcost = Integer.parseInt(args[1]);
-						sender.sendMessage(ChatColor.RED + messages[0]);
-						return true;
+					
+				
+				//Getting the first argument
+				int arg1;
+				try
+				{
+					arg1 = Integer.parseInt(args[1]);
+				} catch (NumberFormatException e)
+				{
+					sender.sendMessage("\""+args[1]+"\" isn´t a number.");
+					return true;
 				}
-				if (split.length == 2 && split[0].equalsIgnoreCase("day")){
-						//if (args.length != 2) return false;
-						push = 4;
-						pcost = Integer.parseInt(args[1]);
-						sender.sendMessage(ChatColor.RED + messages[0]);
-						return true;
+				
+				if (econ == null)
+				{
+					//Itembased payment
+					
+					//Getting the secound argument, the item
+					int item;
+					try
+					{
+						item = Integer.parseInt(args[2]);
+					} catch (NumberFormatException e)
+					{
+						Material material = Material.getMaterial(args[2].toUpperCase());
+						if (material == null)
+						{
+							sender.sendMessage("\""+args[2]+"\" wasn´t found.");
+							return true;
+						}
+						item = material.getId();
+					}
+					
+					//Create the ControlButton and add it to the toDoList
+					ControlButton cb = new ControlButton(type, arg1, item);
+					onCreation.put(player, cb);
+
+					//Informing player
+					sender.sendMessage(ChatColor.RED + messages[0]);
+					return true;
 				}
-				if (split.length == 2 && split[0].equalsIgnoreCase("night")){
-						//if (args.length != 2) return false;
-						push = 5;
-						pcost = Integer.parseInt(args[1]);
-						sender.sendMessage(ChatColor.RED + messages[0]);
-						return true;
+				else
+				{
+					//Moneybased payment
+					
+					//Getting the secound argument
+					String receiver = args[2];
+					
+					//Create the ControlButton and add it to the toDoList
+					ControlButton cb = new ControlButton(type, arg1);
+					cb.setReceiver(receiver);
+					onCreation.put(player, cb);
+
+					//Informing player
+					sender.sendMessage(ChatColor.RED + messages[0]);
+					return true;
 				}
-			} else {
+			} 
+			else 
+			{
+				//Player has no permissions
 				sender.sendMessage(messages[1]);
 				return true;
 			}
 		}
 		return false;
 	}
+	
+	 private boolean setupEconomy() 
+	 {
+	        if (getServer().getPluginManager().getPlugin("Vault") == null)
+	            return false;
+	        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+	        if (rsp == null) {
+	            return false;
+	        }
+	        econ = rsp.getProvider();
+	        return econ != null;
+	    }
 }
